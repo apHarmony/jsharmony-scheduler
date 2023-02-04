@@ -1,0 +1,13 @@
+{
+  "modules": {
+    "jsHarmonyFactory": {
+      "static_menu": {
+        "sub_menu": [
+          { "menu_name": "Admin/ScheduleTask_Listing", "menu_desc": "Scheduler History", "menu_cmd": "{namespace}Admin/ScheduleTask_Listing", "menu_subcmd": null, "menu_seq": 80070, "menu_id": 80070, "menu_parent_name": "Admin", "roles": { "main": [ "SYSADMIN", "DEV" ] } },
+
+          { "menu_name": "Dev/Schedule_Listing", "menu_desc": "Scheduler", "menu_cmd": "{namespace}Dev/Schedule_Listing", "menu_subcmd": null, "menu_seq": 90040, "menu_id": 90040, "menu_parent_name": "Dev", "roles": { "main": [ "DEV" ] } },
+        ],
+      }
+    }
+  },
+}

@@ -1,0 +1,28 @@
+{
+  "dev": true,
+  "layout": "grid",
+  "title": "Scheduler Configuration",
+  "table": "{schema}.schedule",
+  "menu": "Dev/Schedule_Listing",
+  "caption": ["","Schedule","Schedules"],
+  "actions": "B",
+  "sort": ["vschedule_name"],
+  "buttons":[
+    { "link":"insert:Schedule","icon":"add","text":"New Task" },
+  ],
+  "fields": [
+    {"name":"schedule_id", "caption":"ID", "link":"update:Schedule"},
+
+    
+    {"name":"schedule_name", "caption":"Task Name", "link":"update:Schedule"},
+    {"name":"schedule_desc", "caption":"Desc"},
+    {"name":"schedule_sts", "caption":"Status", "lov": { "code": "ac" }},
+    {"name":"schedule_action_type", "caption":"Action", "lov": { "code": "schedule_action_type" }},
+    {"name":"schedule_start_tstmp", "caption":"Start Dt","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_next_tstmp", "caption":"Next Run","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_etstmp", "caption":"Entered","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_euser", "caption":"Entered By", "sqlselect": "jsharmony.my_db_user_fmt(schedule_euser)"},
+    {"name":"schedule_mtstmp", "caption":"Modified","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_muser", "caption":"Modified By", "sqlselect": "jsharmony.my_db_user_fmt(schedule_muser)"},
+  ]
+}

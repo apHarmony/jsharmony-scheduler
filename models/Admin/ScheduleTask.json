@@ -1,0 +1,24 @@
+{
+  "ScheduleTask": {
+    "layout":"form",
+    "table":"schedule_task",
+    "title":"Scheduled Task",
+    "menu":"Admin",
+    "actions":"B",
+    "onecolumn":true,
+    "onload":"_this.onload();",
+    "css":[
+      ".xbody_<%=model.class%> { width:100%; padding-right:30px; box-sizing:border-box; padding-bottom:0px; }",
+      "#<%=model.class%>_log { padding-top:3px; padding-left:3px; margin-top:0; background-color:#fff; }"
+    ],
+    "fields": [
+      {"name":"schedule_task_id","caption":"Task ID","control":"label","captionstyle":"font-weight:bold;","key":true},
+      {"name":"schedule_task_type","caption":"Type","control":"label", "nl": false,"captionstyle":"font-weight:bold;margin-left:30px;"},
+      {"name":"schedule_task_summary", "caption":"Summary","control":"label", "nl": false,"captionstyle":"font-weight:bold;margin-left:30px;"},
+      {"name":"schedule_task_rslt", "caption":"Result","control":"label"},
+      {"name":"schedule_task_rslt_tstmp", "caption":"Result Dt","control":"label","format":["date","MM/DD/YYYY h:mm A"], "nl": false,"captionstyle":"font-weight:bold;margin-left:30px;"},
+      {"name":"schedule_task_rslt_desc", "caption":"Desc", "control": "label"},
+      {"control":"html","value":"<h3 style='margin-bottom:8px;'>Log</h3><pre id='<%=model.class%>_log'></pre>"}
+    ]
+  }
+}

@@ -1,0 +1,159 @@
+<script type="text/x-jsharmony-template" class="<%=model.class%>_info_recur">
+RECUR format, from <a href="https://www.rfc-editor.org/rfc/rfc5545.txt" rel="nofollow" target="_blank">IETF RFC 5545</a>
+<div style="margin-right:15px;">
+<pre>Example:
+FREQ=WEEKLY;INTERVAL=5;UNTIL=20130130T230000Z;BYDAY=MO,FR
+* Dates are in local time, even if "Z" is used
+* Use Schedule Config data parameters as @PARAM1
+
+RECUR Format:
+recur           = recur-rule-part *( ";" recur-rule-part )
+                ;
+                ; The rule parts are not ordered in any
+                ; particular sequence.
+                ;
+                ; The FREQ rule part is REQUIRED,
+                ; but MUST NOT occur more than once.
+                ;
+                ; The UNTIL or COUNT rule parts are OPTIONAL,
+                ; but they MUST NOT occur in the same 'recur'.
+                ;
+                ; The other rule parts are OPTIONAL,
+                ; but MUST NOT occur more than once.
+
+recur-rule-part = ( "FREQ" "=" freq )
+                / ( "UNTIL" "=" enddate )
+                / ( "COUNT" "=" 1*DIGIT )
+                / ( "INTERVAL" "=" 1*DIGIT )
+                / ( "BYSECOND" "=" byseclist )
+                / ( "BYMINUTE" "=" byminlist )
+                / ( "BYHOUR" "=" byhrlist )
+                / ( "BYDAY" "=" bywdaylist )
+                / ( "BYMONTHDAY" "=" bymodaylist )
+                / ( "BYYEARDAY" "=" byyrdaylist )
+                / ( "BYWEEKNO" "=" bywknolist )
+                / ( "BYMONTH" "=" bymolist )
+                / ( "BYSETPOS" "=" bysplist )
+                / ( "WKST" "=" weekday )
+                
+freq        = "SECONDLY" / "MINUTELY" / "HOURLY" / "DAILY"
+            / "WEEKLY" / "MONTHLY" / "YEARLY"
+
+enddate     = date / date-time
+
+byseclist   = ( seconds *("," seconds) )
+
+seconds     = 1*2DIGIT       ;0 to 60
+
+byminlist   = ( minutes *("," minutes) )
+
+minutes     = 1*2DIGIT       ;0 to 59
+
+byhrlist    = ( hour *("," hour) )
+
+hour        = 1*2DIGIT       ;0 to 23
+
+bywdaylist  = ( weekdaynum *("," weekdaynum) )
+
+weekdaynum  = [[plus / minus] ordwk] weekday
+
+plus        = "+"
+
+minus       = "-"
+
+ordwk       = 1*2DIGIT       ;1 to 53
+
+weekday     = "SU" / "MO" / "TU" / "WE" / "TH" / "FR" / "SA"
+;Corresponding to SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY,
+;FRIDAY, and SATURDAY days of the week.
+
+bymodaylist = ( monthdaynum *("," monthdaynum) )
+
+monthdaynum = [plus / minus] ordmoday
+
+ordmoday    = 1*2DIGIT       ;1 to 31
+
+byyrdaylist = ( yeardaynum *("," yeardaynum) )
+
+yeardaynum  = [plus / minus] ordyrday
+
+ordyrday    = 1*3DIGIT      ;1 to 366
+
+bywknolist  = ( weeknum *("," weeknum) )
+
+weeknum     = [plus / minus] ordwk
+
+bymolist    = ( monthnum *("," monthnum) )
+
+monthnum    = 1*2DIGIT       ;1 to 12
+
+bysplist    = ( setposday *("," setposday) )
+
+setposday   = yeardaynum
+</pre>
+</div>
+</script>
+
+<script type="text/x-jsharmony-template" class="<%=model.class%>_info_rdate">
+RDATE format, from <a href="https://www.rfc-editor.org/rfc/rfc5545.txt" rel="nofollow" target="_blank">IETF RFC 5545</a>
+<div style="margin-right:15px;">
+<pre>Example:
+20220101T011000Z,20220201T011000Z
+* Dates are in local time, even if "Z" is used
+* Use Schedule Config data parameters as @PARAM1
+
+RDATE Format:
+rdate      = rdtparam ":" rdtval *("," rdtval)
+
+rdtparam   = *(
+           ;
+           ; The following are OPTIONAL,
+           ; but MUST NOT occur more than once.
+           ;
+           ("VALUE" "=" ("DATE-TIME" / "DATE" / "PERIOD")) /
+           (tzidparam) /
+           ;
+           ; The following is OPTIONAL,
+           ; and MAY occur more than once.
+           ;
+           (other-param)
+           ;
+           )
+
+rdtval     = date-time / date / period
+;Value MUST match value type
+</pre>
+</div>
+</script>
+
+<script type="text/x-jsharmony-template" class="<%=model.class%>_info_config">
+The Schedule Config can have the following parameters:
+<div style="margin-right:15px;">
+<pre>{
+  "fields": [
+    //Array of fields
+    {"name":"param1","type":"bigint","caption":"Param 1","default":"value1"}
+  ],
+  "log": [
+    "path": "sample-task-@schedule_task_id.log"
+  ],
+  "data": { //For dynamic fields in Recur Rule / Dates / Ex Rule / Ex Dates
+    "PARAM1": {
+      "type": "datetime" / "date" / "string"
+      "sql": "select value1", //Returns single value, or comma-separated list if multiple values are returned
+      "post_process": "schedule_data.PARAM1 = 'new value'; return callback();"  //callback(err)
+    }
+  }
+}</pre>
+</div>
+</script>
+
+<script type="text/x-jsharmony-template" class="<%=model.class%>_info_params">
+  The Schedule Params can be defined as follows:
+  <div style="margin-right:15px;">
+  <pre>{
+    "key1": "value1"
+    "key2": { "js": "return jsh.Config.app_settings.system_value1;" }
+}</pre>
+</div>
+</script>

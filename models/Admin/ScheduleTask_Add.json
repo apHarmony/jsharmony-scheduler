@@ -1,0 +1,23 @@
+{
+  "layout": "form",
+  "title": "Run Task",
+  "table": "schedule",
+  "onecolumn":true,
+  "nokey": true,
+  "caption": ["","Task","Tasks"],
+  "actions": "BU",
+  "sqlselect":[
+    "select ",
+    "'' schedule_id",
+  ],
+  "sqlupdate":[
+    "insert into {schema}.schedule_task(schedule_id, schedule_task_params, schedule_task_type) values(@schedule_id, @schedule_task_params, 'MANUAL');"
+  ],
+  "hide_system_buttons":["print","save"],
+  "fields": [
+    {"name":"schedule_id","actions":"BU","type":"varchar","control":"dropdown","caption":"Task","validate":["Required"],
+      "lov":{ "sql": "select schedule_id code_val, schedule_name code_txt from {schema}.schedule where schedule_sts='ACTIVE' order by schedule_name" } },
+    {"name":"schedule_task_params","actions":"BU", "caption":"Params", "control": "textarea", "format": "json", "controlstyle": "height:100px; width: 500px;", "validate": ["IsJSON"]},
+    {"control":"button","value":"Schedule Task","controlstyle": "padding:3px 8px;margin-top:6px;","onclick": "if(!xmodel.controller.form.Data.Commit()) return; XForm.prototype.XExecutePost(xmodel.id, { schedule_id: xmodel.get('schedule_id'), schedule_task_params: xmodel.get('schedule_task_params') }, function(rslt){ xmodel.controller.form.ResetDirty(); XExt.navTo(jsh._BASEURL+xmodel.module_namespace+'Admin/ScheduleTask_Listing'); });"}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "layout": "grid",
+  "title": "Scheduler History",
+  "table": "schedule_task",
+  "menu": "Admin/ScheduleTask_Listing",
+  "caption": ["","Task","Tasks"],
+  "actions": "B",
+  "sort": ["vschedule_task_start_tstmp"],
+  "buttons":[
+    { "name":"runTask", "link":"ScheduleTask_Add","icon":"add","text":"Run Task" },
+  ],
+  "fields": [
+    {"name":"schedule_task_id", "caption":"ID"},
+    {"name":"schedule_task_start_tstmp", "caption":"Date","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_name", "caption":"Task", "sqlselect":"(select schedule_name from {schema}.schedule where schedule.schedule_id=schedule_task.schedule_id)"},
+    {"name":"schedule_task_type", "caption":"Type", "lov": { "code": "schedule_task_type" }},
+    {"name":"schedule_task_rslt", "caption":"Result", "lov": { "code": "schedule_task_rslt" }},
+    {"name":"schedule_task_rslt_tstmp", "caption":"Result Dt","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_task_summary", "caption":"Summary"},
+    {"name":"schedule_task_rslt_desc", "caption":"Desc"},
+    {"control": "label", "value": "Details", "link": "browse:ScheduleTask"},
+    {"name":"schedule_task_etstmp", "caption":"Entered","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_task_euser", "caption":"Entered By", "sqlselect": "jsharmony.my_db_user_fmt(schedule_task_euser)"},
+    {"name":"schedule_task_mtstmp", "caption":"Modified","format":["date","MM/DD/YYYY h:mm A"]},
+    {"name":"schedule_task_muser", "caption":"Modified By", "sqlselect": "jsharmony.my_db_user_fmt(schedule_task_muser)"},
+    {"name":"schedule_task_snotes", "caption":"System Notes"},
+  ]
+}

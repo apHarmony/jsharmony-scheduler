@@ -1,0 +1,140 @@
+{
+  "code_schedule_action_type": {
+    "type": "code",
+    "caption": "Schedule Action",
+    "init_data": [
+      {"code_seq":1, "code_val":"JOB", "code_txt":"Job"},
+      {"code_seq":2, "code_val":"TASK", "code_txt":"Task"},
+      {"code_seq":3, "code_val":"SQL", "code_txt":"SQL"},
+      {"code_seq":4, "code_val":"JS", "code_txt":"JavaScript"}
+    ]
+  },
+  
+  "schedule":{
+    "type": "table",
+    "caption": "Schedule",
+    "table": "schedule",
+    "columns": [
+      {"name":"schedule_id", "type":"bigint", "key":true, "identity": true, "null":false},
+      {"name":"schedule_name", "type":"varchar", "length": 128, "null":false},
+      {"name":"schedule_desc", "type":"varchar", "length": 1024},
+      {"name":"schedule_sts", "type":"varchar", "length":32, "foreignkey":{"jsharmony.code_ac":"code_val"}, "null":false, "default":"ACTIVE"},
+      {"name":"schedule_start_tstmp", "type":"datetime", "precision":7, "null":false},
+      {"name":"schedule_rrule", "type":"varchar", "length": -1},
+      {"name":"schedule_rdate", "type":"varchar", "length": -1},
+      {"name":"schedule_exrule", "type":"varchar", "length": -1},
+      {"name":"schedule_exdate", "type":"varchar", "length": -1},
+      {"name":"schedule_next_tstmp", "type":"datetime", "precision":7},
+      {"name":"schedule_window", "type":"int", "null":false, "default": "86400" },
+      {"name":"schedule_timeout", "type":"int", "null":false, "default": "3600" },
+      {"name":"schedule_action_type", "type":"varchar", "length":32, "foreignkey":{"code_schedule_action_type":"code_val"}, "null":false},
+      {"name":"schedule_action", "type":"varchar", "length": -1},
+      {"name":"schedule_params", "type":"varchar", "length": -1},
+      {"name":"schedule_retry_count", "type":"int", "null":false, "default": "0" },
+      {"name":"schedule_retry_delay", "type":"int", "null":false, "default": "60" },
+      {"name":"schedule_config", "type":"varchar", "length": -1},
+      {"name":"schedule_euser", "type":"varchar", "length":20, "default": { "sql": "%%%%%%jsh.map.current_user%%%%%%" }},
+      {"name":"schedule_etstmp", "type":"datetime", "precision":7, "default": { "sql": "%%%%%%jsh.map.timestamp%%%%%%" }},
+      {"name":"schedule_muser", "type":"varchar", "length":20},
+      {"name":"schedule_mtstmp", "type":"datetime", "precision":7},
+      {"name":"schedule_snotes", "type":"varchar", "length":1024},
+    ],
+    "triggers": [
+      { "on": ["update", "insert"], "exec": [
+          "set(schedule_mtstmp,%%%%%%jsh.map.timestamp%%%%%%);",
+          "set(schedule_muser,%%%%%%jsh.map.current_user%%%%%%);",
+        ]
+      },
+      { "on": ["insert"], "exec": [
+          "set(schedule_next_tstmp,null)",
+          "jsharmony.log_audit_insert('schedule',inserted(schedule_id),schedule_id)",
+          "return_insert_key(schedule, schedule_id, schedule_id=inserted(schedule_id))",
+        ]
+      },
+      { "on": ["update"], "exec": [
+          "setif(update(schedule_sts) or update(schedule_start_tstmp) or update(schedule_rrule) or update(schedule_rdate) or update(schedule_exrule) or update(schedule_exdate) or update(schedule_window) or update(schedule_timeout) or update(schedule_retry_count) or update(schedule_retry_delay),schedule_next_tstmp,null)",
+          "jsharmony.log_audit_update_mult('schedule',deleted(schedule_id),[\"schedule_name\",\"schedule_desc\",\"schedule_sts\",\"schedule_start_tstmp\",\"schedule_rrule\",\"schedule_rdate\",\"schedule_exrule\",\"schedule_exdate\",\"schedule_window\",\"schedule_timeout\",\"schedule_action_type\",\"schedule_action\",\"schedule_params\",\"schedule_retry_count\",\"schedule_retry_delay\",\"schedule_config\"])",
+        ]
+      },
+      {
+        "on": ["delete"], "exec": [
+          "jsharmony.log_audit_delete_mult('schedule',deleted(schedule_id),[\"schedule_name\",\"schedule_desc\",\"schedule_sts\",\"schedule_start_tstmp\",\"schedule_rrule\",\"schedule_rdate\",\"schedule_exrule\",\"schedule_exdate\",\"schedule_window\",\"schedule_timeout\",\"schedule_action_type\",\"schedule_action\",\"schedule_params\",\"schedule_retry_count\",\"schedule_retry_delay\",\"schedule_config\"])",
+        ]
+      }
+    ],
+    "sample_data": [
+      { "schedule_name": "Test SQL", "schedule_desc": "Test SQL Command", "schedule_start_tstmp": { "sql": "jsharmony.my_now()" }, "schedule_rrule": "FREQ=MINUTELY;INTERVAL=1", "schedule_next_tstmp": { "sql": "jsharmony.my_now()" }, "schedule_action_type": "SQL", "schedule_action": "{ \"sql\": \"select @param1\" }", "schedule_config": "{ \"fields\": [{\"name\":\"param1\",\"type\":\"bigint\",\"caption\":\"Param 1\"}] }", "schedule_retry_count": 3, "schedule_retry_delay": 10 },
+    ],
+  },
+  
+  "code_schedule_task_type": {
+    "type": "code",
+    "caption": "Schedule Task Type",
+    "init_data": [
+      {"code_seq":1, "code_val":"AUTO", "code_txt":"Auto"},
+      {"code_seq":2, "code_val":"MANUAL", "code_txt":"Manual"},
+    ]
+  },
+
+  "code_schedule_task_rslt": {
+    "type": "code",
+    "caption": "Schedule Task Status",
+    "init_data": [
+      {"code_seq":1, "code_val":"PENDING", "code_txt":"Pending"},
+      {"code_seq":2, "code_val":"RUNNING", "code_txt":"Running"},
+      {"code_seq":3, "code_val":"SUCCESS", "code_txt":"Success"},
+      {"code_seq":4, "code_val":"FAIL", "code_txt":"Failed"}
+    ]
+  },
+  
+  "schedule_task":{
+    "type": "table",
+    "caption": "Schedule Task",
+    "table": "schedule_task",
+    "columns": [
+      {"name":"schedule_task_id", "type":"bigint", "key":true, "identity": true, "null":false},
+      {"name":"schedule_id", "type":"bigint", "foreignkey":{"schedule":"schedule_id"}, "null":false},
+      {"name":"schedule_task_type", "type":"varchar", "length":32, "foreignkey":{"code_schedule_task_type":"code_val"}, "null":false},
+      {"name":"schedule_task_params", "type":"varchar", "length": -1},
+      {"name":"schedule_task_start_tstmp", "type":"datetime", "precision":7, "default": { "sql": "%%%%%%jsh.map.timestamp%%%%%%" }},
+      {"name":"schedule_task_rslt", "type":"varchar", "length":32, "foreignkey":{"code_schedule_task_rslt":"code_val"}, "null":false, "default":"PENDING"},
+      {"name":"schedule_task_rslt_tstmp", "type":"datetime", "precision":7},
+      {"name":"schedule_task_rslt_desc", "type":"varchar", "length": -1},
+      {"name":"schedule_task_summary", "type":"varchar", "length": -1},
+      {"name":"schedule_task_log", "type":"varchar", "length": -1},
+      {"name":"schedule_task_euser", "type":"varchar", "length":20, "default": { "sql": "%%%%%%jsh.map.current_user%%%%%%" }},
+      {"name":"schedule_task_etstmp", "type":"datetime", "precision":7, "default": { "sql": "%%%%%%jsh.map.timestamp%%%%%%" }},
+      {"name":"schedule_task_muser", "type":"varchar", "length":20},
+      {"name":"schedule_task_mtstmp", "type":"datetime", "precision":7},
+      {"name":"schedule_task_snotes", "type":"varchar", "length":1024},
+    ],
+    "index": [
+      { "columns": ["schedule_task_type"] },
+      { "columns": ["schedule_task_start_tstmp"] },
+      { "columns": ["schedule_task_rslt"] },
+    ],
+    "triggers": [
+      { "on": ["update", "insert"], "exec": [
+          "set(schedule_task_mtstmp,%%%%%%jsh.map.timestamp%%%%%%);",
+          "set(schedule_task_muser,%%%%%%jsh.map.current_user%%%%%%);",
+          "setif((schedule_task_start_tstmp is null) and (schedule_task_rslt<>'PENDING'), schedule_task_start_tstmp, %%%%%%jsh.map.timestamp%%%%%%)",
+          "setif((schedule_task_rslt_tstmp is null) and (schedule_task_rslt='SUCCESS' or schedule_task_rslt='FAIL'), schedule_task_rslt_tstmp, %%%%%%jsh.map.timestamp%%%%%%)",
+        ]
+      },
+      { "on": ["insert"], "exec": [
+          "jsharmony.log_audit_insert('schedule_task',inserted(schedule_task_id),schedule_task_id)",
+          "return_insert_key(schedule_task, schedule_task_id, schedule_task_id=inserted(schedule_task_id))",
+        ]
+      },
+      { "on": ["update"], "exec": [
+          "jsharmony.log_audit_update_mult('schedule_task',deleted(schedule_task_id),[\"schedule_task_type\",\"schedule_task_params\",\"schedule_task_rslt\",\"schedule_task_rslt_desc\",\"schedule_task_summary\"])",
+        ]
+      },
+      {
+        "on": ["delete"], "exec": [
+          "jsharmony.log_audit_delete_mult('schedule_task',deleted(schedule_task_id),[\"schedule_task_type\",\"schedule_task_params\",\"schedule_task_rslt\",\"schedule_task_rslt_desc\",\"schedule_task_summary\"])",
+        ]
+      }
+    ],
+  },
+}

@@ -1,0 +1,20 @@
+{
+  "name": "jsharmony-scheduler",
+  "version": "1.0.0",
+  "description": "jsHarmony Scheduler",
+  "main": "index.js",
+  "keywords": [
+    "jsHarmony",
+    "JavaScript",
+    "Scheduler"
+  ],
+  "author": "apHarmony <contact@apharmony.com> (http://www.apharmony.com/)",
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "jsharmony": "^1.27.0",
+    "jsharmony-factory": "^1.17.0",
+    "lodash": "^4.17.19",
+    "async": "^2.6.2",
+    "rrule": "^2.7.1"
+  }
+}
