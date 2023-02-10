@@ -46,13 +46,13 @@
         ]
       },
       { "on": ["insert"], "exec": [
-          "set(schedule_next_tstmp,null)",
+          "set(schedule_next_tstmp,jsharmony.my_now())",
           "jsharmony.log_audit_insert('schedule',inserted(schedule_id),schedule_id)",
           "return_insert_key(schedule, schedule_id, schedule_id=inserted(schedule_id))",
         ]
       },
       { "on": ["update"], "exec": [
-          "setif(update(schedule_sts) or update(schedule_start_tstmp) or update(schedule_rrule) or update(schedule_rdate) or update(schedule_exrule) or update(schedule_exdate) or update(schedule_window) or update(schedule_timeout) or update(schedule_retry_count) or update(schedule_retry_delay),schedule_next_tstmp,null)",
+          "setif(update(schedule_sts) or update(schedule_start_tstmp) or update(schedule_rrule) or update(schedule_rdate) or update(schedule_exrule) or update(schedule_exdate) or update(schedule_window) or update(schedule_timeout) or update(schedule_retry_count) or update(schedule_retry_delay),schedule_next_tstmp,jsharmony.my_now())",
           "jsharmony.log_audit_update_mult('schedule',deleted(schedule_id),[\"schedule_name\",\"schedule_desc\",\"schedule_sts\",\"schedule_start_tstmp\",\"schedule_rrule\",\"schedule_rdate\",\"schedule_exrule\",\"schedule_exdate\",\"schedule_window\",\"schedule_timeout\",\"schedule_action_type\",\"schedule_action\",\"schedule_params\",\"schedule_retry_count\",\"schedule_retry_delay\",\"schedule_config\"])",
         ]
       },
