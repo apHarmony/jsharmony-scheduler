@@ -25,7 +25,8 @@ var funcs = require('./models/_funcs.js');
 
 function jsHarmonyScheduler(name, options){
   options = _.extend({
-    schema: 'jsharmony'
+    schema: 'jsharmony',
+    existingSchema: true,
   }, options);
 
   var _this = this;
@@ -36,6 +37,7 @@ function jsHarmonyScheduler(name, options){
   _this.typename = 'jsHarmonyScheduler';
 
   _this.schema = options.schema;
+  _this.existingSchema = options.existingSchema;
   _this.funcs = new funcs(_this);
 }
 
