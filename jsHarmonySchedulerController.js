@@ -522,6 +522,7 @@ module.exports = exports = function jsHarmonySchedulerController(module){
     var schedule_timer = null;
     if(schedule_timeout>=0){
       schedule_timer = setTimeout(function(){
+        if(!schedule_timer) return;
         schedule_timer = null;
         timedOut = true;
         var errmsg = 'Scheduled Task '+task.schedule_name+' #'+task.schedule_task_id+' timed out.  Background operations may still be in progress';
@@ -531,7 +532,7 @@ module.exports = exports = function jsHarmonySchedulerController(module){
     }
     op(ptypes, params, function(err, schedule_task_summary){
       if(schedule_timer){
-        clearInterval(schedule_timer);
+        clearTimeout(schedule_timer);
         schedule_timer = null;
       }
       if(timedOut){ _this.taskLog.error(task, 'Scheduled Task '+task.schedule_name+' #'+task.schedule_task_id+' DB operation returned after timeout'); return; }
