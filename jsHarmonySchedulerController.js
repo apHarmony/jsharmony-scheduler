@@ -640,7 +640,7 @@ module.exports = exports = function jsHarmonySchedulerController(module){
           });
         }
         return op_cb(err, schedule_task_summary);
-      });
+      }, undefined, jsh.getDB(action.db || 'default'));
     });
   };
 
