@@ -625,7 +625,7 @@ module.exports = exports = function jsHarmonySchedulerController(module){
     if(_.isString(action)) action = { sql: action };
     _this.execTaskBase(action, task, task_params, schedule_config, callback, function op(ptypes, params, op_cb){
       if(!action || !action.sql) return op_cb(new Error('Action missing sql parameter'));
-      jsh.AppSrv.ExecMultiRecordset('scheduler', module.replaceSchema(action.sql), ptypes, params, function (err, rslt) {
+      jsh.AppSrv.ExecMultiRecordset(action.context || 'scheduler', module.replaceSchema(action.sql), ptypes, params, function (err, rslt) {
         var schedule_task_summary = null;
         if(rslt && rslt.length && rslt[0] && rslt[0].length){
           _.each(rslt[0], function(rs){
