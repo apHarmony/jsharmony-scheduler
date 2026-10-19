@@ -7,7 +7,7 @@
   "actions": "B",
   "sort": ["vschedule_task_start_tstmp"],
   "buttons":[
-    { "name":"runTask", "link":"ScheduleTask_Add","icon":"add","text":"Run Task" },
+    { "name":"runTask", "link":"ScheduleTask_Add","icon":"add","text":"Run Task", "bindings": {} },
   ],
   "fields": [
     {"name":"schedule_task_id", "caption":"ID"},
